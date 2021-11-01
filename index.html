@@ -2,30 +2,31 @@
 <html>
 <head>
     <title>Snake Game</title>
-</head>
+    <style>
 
-<body>
-
-<div id="score">0</div>
-<canvas id="snakeboard" width="400" height="400"></canvas>
-
-<style>
     #snakeboard {
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(50%,50%);
     }
     #score {
         text-align: center;
         font-size: 140px;
     }
 </style>
+</head>
+<body>
+<audio autoplay src="tuyetyeuthuong.mp3"></audio>
+<div><b id="score">0</b></div>
+<canvas id="mycanvas" width="600" height="600"></canvas>
+
+
 </body>
 
 <script>
     const board_border = 'black';
-    const board_background = "white";
+    const board_background = "pink";
     const snake_col = 'lightblue';
     const snake_border = 'darkblue';
 
@@ -34,32 +35,32 @@
         {x: 190, y: 200},
         {x: 180, y: 200},
         {x: 170, y: 200},
-        {x: 160, y: 200}
+        {x: 160, y: 200},
     ]
 
     let score = 0;
-    // True if changing direction
+    // đúng nếu thay đỏi hướng
     let changing_direction = false;
-    // Horizontal velocity
+    //vận tốc ngang
     let food_x;
     let food_y;
     let dx = 10;
-    // Vertical velocity
+    // vận tốc thẳng
     let dy = 0;
 
 
-    // Get the canvas element
-    const snakeboard = document.getElementById("snakeboard");
-    // Return a two dimensional drawing context
+    // lấy phần tử canvass bằng id
+    const snakeboard = document.getElementById("mycanvas");
+    // bối cảnh 2d
     const snakeboard_ctx = snakeboard.getContext("2d");
-    // Start game
+    // bắt đầu game
     main();
 
     gen_food();
 
     document.addEventListener("keydown", change_direction);
 
-    // main function called repeatedly to keep the game running
+    // hàm chính được gọi đi gọi lại nhiều lần để giữ cho trò chơi chạy
     function main() {
 
         if (has_game_ended()) return;
@@ -75,21 +76,21 @@
         }, 100)
     }
 
-    // draw a border around the canvas
+    // vẽ đường viền xung quanh khung canvas
     function clear_board() {
-        //  Select the colour to fill the drawing
+        //  chon mầu để tô
         snakeboard_ctx.fillStyle = board_background;
-        //  Select the colour for the border of the canvas
+        //  chọn mầu cho đường viền
         snakeboard_ctx.strokestyle = board_border;
-        // Draw a "filled" rectangle to cover the entire canvas
+        // vẽ hình chữ nhật để lấp đầy che toàn bộ khung vẽ
         snakeboard_ctx.fillRect(0, 0, snakeboard.width, snakeboard.height);
-        // Draw a "border" around the entire canvas
+        // vẽ đường viền xung quanh khung vẽ
         snakeboard_ctx.strokeRect(0, 0, snakeboard.width, snakeboard.height);
     }
 
-    // Draw the snake on the canvas
+    // vẽ con rắn trên canvas
     function drawSnake() {
-        // Draw each part
+        // vẽ từng phần
         snake.forEach(drawSnakePart)
     }
 
@@ -100,24 +101,31 @@
         snakeboard_ctx.strokeRect(food_x, food_y, 10, 10);
     }
 
-    // Draw one snake part
+    // vẽ 1 phần con rắn
     function drawSnakePart(snakePart) {
 
-        // Set the colour of the snake part
+        // đặt mầu cho con rắn
         snakeboard_ctx.fillStyle = snake_col;
-        // Set the border colour of the snake part
+        // đặt mầu viền cho rắn
         snakeboard_ctx.strokestyle = snake_border;
-        // Draw a "filled" rectangle to represent the snake part at the coordinates
-        // the part is located
+        // Vẽ một hình chữ nhật "lấp đầy" để thể hiện phần con rắn tại tọa độ
+        // phần nằm
         snakeboard_ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
-        // Draw a border around the snake part
+        // Vẽ đường viền xung quanh phần con rắn
         snakeboard_ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
     }
 
     function has_game_ended() {
+        console.log('goi ham game ended')
         for (let i = 4; i < snake.length; i++) {
-            if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) return true
+
+            if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
+                console.log('vao if khi nao?')
+                console.log('snake[i].x = ',snake[i].x, 'snake[i].y == ', snake[i].y)
+                return true
+            }
         }
+        console.log('duoi vong for')
         const hitLeftWall = snake[0].x < 0;
         const hitRightWall = snake[0].x > snakeboard.width - 10;
         const hitToptWall = snake[0].y < 0;
@@ -130,13 +138,13 @@
     }
 
     function gen_food() {
-        // Generate a random number the food x-coordinate
+        // Tạo một số ngẫu nhiên theo tọa độ x thức ăn
         food_x = random_food(0, snakeboard.width - 10);
-        // Generate a random number for the food y-coordinate
+        // Tạo một số ngẫu nhiên cho tọa độ y thực phẩm
         food_y = random_food(0, snakeboard.height - 10);
-        // if the new food location is where the snake currently is, generate a new food location
+        // nếu vị trí thức ăn mới là nơi con rắn hiện đang ở, hãy tạo một vị trí thức ăn mới
         snake.forEach(function has_snake_eaten_food(part) {
-            const has_eaten = part.x == food_x && part.y == food_y;
+            const has_eaten = part.x === food_x && part.y === food_y;
             if (has_eaten) gen_food();
         });
     }
@@ -147,7 +155,7 @@
         const UP_KEY = 38;
         const DOWN_KEY = 40;
 
-        // Prevent the snake from reversing
+        // Ngăn con rắn đảo ngược
 
         if (changing_direction) return;
         changing_direction = true;
@@ -175,20 +183,20 @@
     }
 
     function move_snake() {
-        // Create the new Snake's head
+        // Tạo đầu Snake mới
         const head = {x: snake[0].x + dx, y: snake[0].y + dy};
-        // Add the new head to the beginning of snake body
+        // Thêm phần đầu mới vào phần đầu của thân rắn
         snake.unshift(head);
         const has_eaten_food = snake[0].x === food_x && snake[0].y === food_y;
         if (has_eaten_food) {
-            // Increase score
-            score += 10;
-            // Display score on screen
+            //  Tăng điểm
+            score += 100;
+            // Hiển thị điểm trên màn hình
             document.getElementById('score').innerHTML = score;
-            // Generate new food location
+            // Tạo vị trí thực phẩm mới
             gen_food();
         } else {
-            // Remove the last part of snake body
+            // Loại bỏ phần cuối cùng của cơ thể rắn
             snake.pop();
         }
     }
