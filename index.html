@@ -3,12 +3,15 @@
 <head>
     <title>Snake Game</title>
     <style>
+        canvas {
+            text-align: center;
+        }
 
     #snakeboard {
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(50%,50%);
+        transform: translate(-50%,-50%);
     }
     #score {
         text-align: center;
@@ -17,25 +20,23 @@
 </style>
 </head>
 <body>
-<audio autoplay src="tuyetyeuthuong.mp3"></audio>
-<div><b id="score">0</b></div>
-<canvas id="mycanvas" width="600" height="600"></canvas>
+<audio controls src="tuyetyeuthuong.mp3"></audio>
+<div id="score">0</div>
+
+<canvas id="mycanvas" width="400" height="400"></canvas>
 
 
 </body>
 
 <script>
-    const board_border = 'black';
-    const board_background = "pink";
-    const snake_col = 'lightblue';
-    const snake_border = 'darkblue';
+
 
     let snake = [
         {x: 200, y: 200},
-        {x: 190, y: 200},
         {x: 180, y: 200},
-        {x: 170, y: 200},
         {x: 160, y: 200},
+        {x: 140, y: 200},
+        {x: 120, y: 200},
     ]
 
     let score = 0;
@@ -44,7 +45,7 @@
     //vận tốc ngang
     let food_x;
     let food_y;
-    let dx = 10;
+    let dx = 20;
     // vận tốc thẳng
     let dy = 0;
 
@@ -71,9 +72,9 @@
             drawFood();
             move_snake();
             drawSnake();
-            // Repeat
+            // lặp lại
             main();
-        }, 100)
+        } , 90)
     }
 
     // vẽ đường viền xung quanh khung canvas
@@ -96,24 +97,30 @@
 
     function drawFood() {
         snakeboard_ctx.fillStyle = 'lightgreen';
-        snakeboard_ctx.strokestyle = 'darkgreen';
-        snakeboard_ctx.fillRect(food_x, food_y, 10, 10);
-        snakeboard_ctx.strokeRect(food_x, food_y, 10, 10);
+        snakeboard_ctx.strokestyle = 'blue';
+        snakeboard_ctx.fillRect(food_x, food_y, 20, 20);
+        snakeboard_ctx.strokeRect(food_x, food_y, 20, 20);
     }
 
-    // vẽ 1 phần con rắn
+    // vẽ 1 phần  rắn
     function drawSnakePart(snakePart) {
 
-        // đặt mầu cho con rắn
+        // đặt mầu cho  rắn
         snakeboard_ctx.fillStyle = snake_col;
         // đặt mầu viền cho rắn
         snakeboard_ctx.strokestyle = snake_border;
         // Vẽ một hình chữ nhật "lấp đầy" để thể hiện phần con rắn tại tọa độ
         // phần nằm
-        snakeboard_ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
+        snakeboard_ctx.fillRect(snakePart.x, snakePart.y, 20, 20);
         // Vẽ đường viền xung quanh phần con rắn
-        snakeboard_ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
+        snakeboard_ctx.strokeRect(snakePart.x, snakePart.y, 20, 20);
     }
+
+    const board_border = 'black';
+    const board_background = "pink";
+    const snake_col = 'lightblue';
+    const snake_border = 'darkblue';
+
 
     function has_game_ended() {
         console.log('goi ham game ended')
